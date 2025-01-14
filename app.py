@@ -4,12 +4,21 @@ from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 
+<<<<<<< HEAD
 # Configurações do banco de dados através de variáveis de ambiente
 DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
 DB_USER = os.getenv("DB_USER", "user-test")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_NAME = os.getenv("DB_NAME", "task_manager")
 DB_PORT = int(os.getenv("DB_PORT", 3306))
+=======
+# Configurações do banco de dados
+DB_HOST = "104.198.7.70"
+DB_USER = "user1"           # Usuário do MySQL
+DB_PASSWORD = "}s<LTI]LUzEi"  # Senha do MySQL
+DB_NAME = "task_manager"   # Nome do banco de dados
+DB_PORT = 3306             # Porta padrão do MySQL
+>>>>>>> d8f277111eca546d805bcc2e7f38d4986768a7cb
 
 # Função para criar banco de dados e tabela, caso não existam
 def initialize_database():
