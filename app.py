@@ -4,17 +4,16 @@ from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 
-# Configurações do banco de dados
-DB_HOST = "35.232.189.37"  # IP público da instância Cloud SQL
-DB_USER = "root"           # Usuário do MySQL
-DB_PASSWORD = "@Vinny629233"  # Senha do MySQL
-DB_NAME = "task_manager"   # Nome do banco de dados
-DB_PORT = 3306             # Porta padrão do MySQL
+# Configurações do banco de dados através de variáveis de ambiente
+DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
+DB_USER = os.getenv("DB_USER", "user-test")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+DB_NAME = os.getenv("DB_NAME", "task_manager")
+DB_PORT = int(os.getenv("DB_PORT", 3306))
 
 # Função para criar banco de dados e tabela, caso não existam
 def initialize_database():
     try:
-        # Conecta ao MySQL sem especificar o banco de dados
         connection = pymysql.connect(
             host=DB_HOST,
             user=DB_USER,
@@ -22,15 +21,9 @@ def initialize_database():
             port=DB_PORT
         )
         cursor = connection.cursor()
-
-        # Cria o banco de dados, se não existir
         cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DB_NAME}")
         print(f"Banco de dados '{DB_NAME}' verificado/criado com sucesso.")
-
-        # Conecta ao banco de dados recém-criado
         connection.select_db(DB_NAME)
-
-        # Cria a tabela `tasks`, se não existir
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS tasks (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -52,11 +45,11 @@ initialize_database()
 # Conexão com o banco de dados
 try:
     db = pymysql.connect(
-        host="localhost",  # Cloud SQL Connections usa localhost
+        host=DB_HOST,
         user=DB_USER,
         password=DB_PASSWORD,
         database=DB_NAME,
-        port=int(DB_PORT)
+        port=DB_PORT
     )
     print("Conexão com o banco foi bem-sucedida!")
 except pymysql.MySQLError as err:
@@ -106,6 +99,5 @@ def delete_task(task_id):
         return "Erro ao excluir tarefa."
 
 if __name__ == '__main__':
-    # Obtém a porta do ambiente (padrão para Cloud Run é 8080)
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)

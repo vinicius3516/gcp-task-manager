@@ -1,17 +1,20 @@
-# Usa uma imagem oficial do Python
+# Usar uma imagem oficial do Python
 FROM python:3.9-slim
 
-# Define o diretório de trabalho dentro do contêiner
+# Configurar o diretório de trabalho
 WORKDIR /app
 
-# Copia os arquivos do projeto para o contêiner
-COPY . /app
+# Copiar os arquivos da aplicação para o contêiner
+COPY . .
 
-# Instala as dependências da aplicação
+# Instalar as dependências
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expõe a porta 8080 (Cloud Run requer essa porta)
+# Expor a porta que o Flask usará (padrão 8080 para Cloud Run)
 EXPOSE 8080
 
-# Define o comando para rodar sua aplicação
+# Definir a variável de ambiente PORT
+ENV PORT 8080
+
+# Comando para rodar a aplicação
 CMD ["python", "app.py"]
